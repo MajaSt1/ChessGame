@@ -25,7 +25,6 @@ import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckExcep
 public class BoardManager {
 
 	private Board board = new Board();
-	MoveManager moveManager= new Movemanagar();
 
 	public BoardManager() {
 		initBoard();
@@ -85,7 +84,7 @@ public class BoardManager {
 		boolean isAnyMoveValid = isAnyMoveValid(nextMoveColor);
 
 		BoardState boardState;
-		if (isKingInCheck) {
+		if (isKingInCheck) { // czy jakikolwiek ruch jest mozliwy zeby wyjsc z szachu
 			if (isAnyMoveValid) {
 				boardState = BoardState.CHECK;
 			} else {
@@ -235,18 +234,26 @@ public class BoardManager {
 	}
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
-		moveManager;
-		return new Move();// From, To, MoveType, Piece
+		//czy ruch jest dozwolony dla danej figury
+		//javadoc! -bedzie oceniane
+		//performPromotion(move, movedPiece);
+		PieceMoveFactory pieceMoveFactory = new PieceMoveFactory();
+		
+		// TODO please add implementation here
+		return pieceMoveFactory.getPiece(Piece.BLACK_BISHOP);// From, To, MoveType, Piece
 	}
 
 	private boolean isKingInCheck(Color kingColor) {
+		//czy ruch nie spowoduje zrobienia samemu sobie szacha ?
 
 		// TODO please add implementation here
 		return false;
 	}
 
-	private boolean isAnyMoveValid(Color nextMoveColor) {
+	private boolean isAnyMoveValid(Color nextMoveColor) { 
+		//czy ruch jest mozliwy do wykonania
 
+		//do updateBoardState()!!!!! -> isKingCheck() -> validateMove()
 		// TODO please add implementation here
 
 		return false;

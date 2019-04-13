@@ -12,7 +12,7 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({ BoardManagerTest.class })
+@SuiteClasses({ BoardManagerTest.class }) //nie jest potrzebne wlasciwie
 public class ChessTestSuite {
 
 	@Test
