@@ -1,27 +1,33 @@
 package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
+import com.capgemini.chess.algorithms.data.enums.Color;
 import com.capgemini.chess.algorithms.data.enums.MoveType;
 import com.capgemini.chess.algorithms.data.enums.Piece;
+import com.capgemini.chess.algorithms.data.generated.Board;
+import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
 public class Bishop implements Movement {
-	
+
 	private Coordinate from;
 	private Coordinate to;
 	private MoveType type;
 	private Piece movedPiece;
-	//alt shift J - java doc
-	//Move && Coordinate 
-	
-	 public Bishop() {
+	// alt shift J - java doc
+	// Move && Coordinate
+
+	public Bishop(Coordinate from, Coordinate to) {
+		this.from = from;
+		this.to= to;
 	}
-	 
-	 @Override
-		public String validate(int from, int to) {
-			// TODO Auto-generated method stub
-			return null;
+
+	@Override
+	public boolean validate(Coordinate to , Coordinate from) {
+		if (Math.abs(to.getX() - from.getX()) == Math.abs(from.getY() - to.getX())) {
+			return true; // poruszanie sie po skosie dozwolone
 		}
-	
+		return false;
+	}
 
 	public Coordinate getFrom() {
 		return from;
@@ -54,7 +60,7 @@ public class Bishop implements Movement {
 	public void setMovedPiece(Piece movedPiece) {
 		this.movedPiece = movedPiece;
 	}
-	
+
 	// przedstawienie ruchow 
 	//sciezka
 

@@ -7,8 +7,6 @@ import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveExcep
 
 public class PieceMoveFactory {
 
-	AbstractPieceMove abstractPieceMove;
-
 	public Move getPiece(PieceType piece) {
 		switch(piece){
 		
