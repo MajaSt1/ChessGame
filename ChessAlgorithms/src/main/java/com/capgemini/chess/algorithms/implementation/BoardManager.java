@@ -237,10 +237,10 @@ public class BoardManager {
 		//czy ruch jest dozwolony dla danej figury
 		//javadoc! -bedzie oceniane
 		//performPromotion(move, movedPiece);
-		PieceMoveFactory pieceMoveFactory = new PieceMoveFactory();
-		
-		// TODO please add implementation here
-		return pieceMoveFactory.getPiece(Piece.BLACK_BISHOP);// From, To, MoveType, Piece
+		initBoard();
+		ConditionMovement conditionMovement = new ConditionMovement(from, to);
+		PieceMoveFactory pieceMoveFactory = new PieceMoveFactory(conditionMovement);
+		return pieceMoveFactory.getPiece();// From, To, MoveType, Piece
 	}
 
 	private boolean isKingInCheck(Color kingColor) {
