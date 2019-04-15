@@ -26,15 +26,22 @@ public class Bishop implements Movement {
 	}
 	
 	@Override
-	public boolean isMoveBlocked(Coordinate from, Coordinate to) throws InvalidMoveException{
-		for(int i=0; i< (from.getX()-to.getX()); i ++){
-			int directionX = to.getX() < from.getX() ? 1 : -1;
-			int directionY = to.getY() < from.getY() ? 1 : -1;
+	public boolean isMoveBlocked(Coordinate from, Coordinate to) throws InvalidMoveException {
+
+		int directionX = to.getX() < from.getX() ? 1 : -1;
+		int directionY = to.getY() < from.getY() ? 1 : -1;
+		for (int i = 1; i < Math.abs(to.getX() - from.getX()) - 1; ++i) {
+			if (pieceOnSquare(from.getX() + i * directionX, from.getY() + i * directionY)) {
+				return false;
+			}
 		}
-		return false;
-		
+		return true;
 	}
 	
+	private boolean pieceOnSquare(int i, int j){
+		return true;
+		
+	}
 	
 	public Piece getMovedPiece() {
 		return movedPiece;

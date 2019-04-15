@@ -28,19 +28,19 @@ public class PieceMoveFactory {
 			return conditionMovement.checkingValidationWithCondition(new Bishop());	
 			}
 		case PAWN: {
-			return conditionMovement.checkingValidationWithCondition(new Bishop());
+			return conditionMovement.checkingValidationWithCondition(new Pawn());
 		}
 		case KING: {
-			return conditionMovement.checkingValidationWithCondition(new Bishop());
+			return conditionMovement.checkingValidationWithCondition(new King());
 		}
 		case QUEEN:{
-			return conditionMovement.checkingValidationWithCondition(new Bishop());
+			return conditionMovement.checkingValidationWithCondition(new Queen());
 		}
 		case KNIGHT:{
-			return conditionMovement.checkingValidationWithCondition(new Bishop());
+			return conditionMovement.checkingValidationWithCondition(new Knight());
 		}
 		case ROOK: {
-			return conditionMovement.checkingValidationWithCondition(new Bishop());
+			return conditionMovement.checkingValidationWithCondition(new Rook());
 		}
 		}
 		return null;
