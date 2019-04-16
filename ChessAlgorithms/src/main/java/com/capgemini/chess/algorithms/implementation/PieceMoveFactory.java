@@ -2,11 +2,9 @@ package com.capgemini.chess.algorithms.implementation;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
-import com.capgemini.chess.algorithms.data.enums.BoardState;
-import com.capgemini.chess.algorithms.data.enums.Color;
-import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.enums.PieceType;
 import com.capgemini.chess.algorithms.data.generated.Board;
+import com.capgemini.chess.algorithms.implementation.exceptions.CannotMoveAtTurnException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 
 public class PieceMoveFactory {
@@ -21,26 +19,26 @@ public class PieceMoveFactory {
 	
 	private PieceType type= board.getPieceAt(conditionMovement.getFrom()).getType();
 	
-	public Move getPiece() throws InvalidMoveException {
+	public Move getPiece() throws InvalidMoveException, CannotMoveAtTurnException {
 		switch(type){
 		
 		case BISHOP: {
-			return conditionMovement.checkingValidationWithCondition(new Bishop());	
+			return conditionMovement.playerCanMoveAtTurn(new Bishop());	
 			}
 		case PAWN: {
-			return conditionMovement.checkingValidationWithCondition(new Pawn());
+			return conditionMovement.playerCanMoveAtTurn(new Pawn());
 		}
 		case KING: {
-			return conditionMovement.checkingValidationWithCondition(new King());
+			return conditionMovement.playerCanMoveAtTurn(new King());
 		}
 		case QUEEN:{
-			return conditionMovement.checkingValidationWithCondition(new Queen());
+			return conditionMovement.playerCanMoveAtTurn(new Queen());
 		}
 		case KNIGHT:{
-			return conditionMovement.checkingValidationWithCondition(new Knight());
+			return conditionMovement.playerCanMoveAtTurn(new Knight());
 		}
 		case ROOK: {
-			return conditionMovement.checkingValidationWithCondition(new Rook());
+			return conditionMovement.playerCanMoveAtTurn(new Rook());
 		}
 		}
 		return null;
