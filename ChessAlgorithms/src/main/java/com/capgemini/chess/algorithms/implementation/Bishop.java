@@ -30,18 +30,20 @@ public class Bishop implements Movement {
 
 		int directionX = to.getX() < from.getX() ? 1 : -1;
 		int directionY = to.getY() < from.getY() ? 1 : -1;
-			for (int i = 1; i < Math.abs(to.getX() - from.getX()) - 1; ++i) {
-				if (pieceOnSquare(from.getX() + i * directionX, from.getY() + i * directionY)) {
-					throw new BishopMoveException();
-				}
+		for (int i = 1; i < Math.abs(to.getX() - from.getX()) - 1; ++i) {
+			if (pieceOnSquare(from.getX() + i * directionX, from.getY() + i * directionY)) {
+				throw new BishopMoveException();
 			}
+		}
 		return true;
-	} 
+	}
 
-	private boolean pieceOnSquare(int i, int j){
-	int directionX= board.SIZE
-		return true;	
-	} //czy miejsce jest zajete przez inna figure
+	private boolean pieceOnSquare(int i, int j) {
+		if (board.getPieces()[i][j] != null) {
+			return true;
+		}
+		return false;
+	}
 	
 	public Piece getMovedPiece() {
 		return movedPiece;

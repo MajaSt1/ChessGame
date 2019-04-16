@@ -35,11 +35,11 @@ public class Pawn implements Movement {
 		if (from.getX() == to.getX()) {
 			// not taking a piece
 			if (color.equals(Color.WHITE)) {
-				if (board.getPieceAt(new Coordinate(from.getY() + 1, from.getX())) != null) {
+				if (board.getPieceAt(new Coordinate(from.getX(),from.getY() + 1)) != null) {
 					return false;
 				}
 			} else {
-				if (board.getPieceAt(new Coordinate(from.getY() - 1, from.getX())) != null) {
+				if (board.getPieceAt(new Coordinate(from.getX(),from.getY() - 1)) != null) {
 					return false;
 				}
 			}
@@ -51,26 +51,26 @@ public class Pawn implements Movement {
 				}
 
 				if (color.equals(Color.WHITE)) {
-					if (board.getPieceAt(new Coordinate(from.getY() + 2, from.getX())) != null) {
+					if (board.getPieceAt(new Coordinate( from.getX(),from.getY() + 2)) != null) {
 						return false;
 					}
 				} else {
-					if (board.getPieceAt(new Coordinate(from.getY() - 2, from.getX())) != null) {
+					if (board.getPieceAt(new Coordinate(from.getX(),from.getY() - 2)) != null) {
 						return false;
 					}
 				}
 
 				// En passante
 				if (to.getX() + 1 < 8) {
-					if (board.getPieceAt(new Coordinate(to.getX() + 1, to.getX())) != null) {
-						if (board.getPieceAt(new Coordinate(to.getX() + 1, to.getX())).getClass()
+					if (board.getPieceAt(new Coordinate(to.getX(), to.getX() + 1)) != null) {
+						if (board.getPieceAt(new Coordinate(to.getX(), to.getX() + 1)).getClass()
 								.isInstance(new Pawn())) {
 							ep_able = true;
 						}
 					}
 				} else if (to.getX() - 1 > 0) {
-					if (board.getPieceAt(new Coordinate(to.getX() - 1, to.getX())) != null) {
-						if (board.getPieceAt(new Coordinate(to.getX() - 1, to.getX())).getClass()
+					if (board.getPieceAt(new Coordinate(to.getX(), to.getX() - 1)) != null) {
+						if (board.getPieceAt(new Coordinate(to.getX(), to.getX() - 1)).getClass()
 								.isInstance(new Pawn())) {
 							ep_able = true;
 						}
@@ -95,7 +95,4 @@ public class Pawn implements Movement {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	// is BlackmoveValid 
-	// is White move valid
 }

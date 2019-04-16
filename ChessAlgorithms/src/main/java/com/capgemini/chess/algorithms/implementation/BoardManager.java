@@ -17,6 +17,7 @@ import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.CannotMoveAtTurnException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
+import com.capgemini.chess.algorithms.implementation.exceptions.NoKingAtTheBoardException;
 
 /**
  * Class for managing of basic operations on the Chess Board.
@@ -63,8 +64,9 @@ public class BoardManager {
 	 * @return move object which includes moved piece and move type
 	 * @throws InvalidMoveException
 	 *             in case move is not valid
+	 * @throws CannotMoveAtTurnException 
 	 */
-	public Move performMove(Coordinate from, Coordinate to) throws InvalidMoveException {
+	public Move performMove(Coordinate from, Coordinate to) throws InvalidMoveException, CannotMoveAtTurnException {
 
 		Move move = validateMove(from, to);
 
@@ -77,8 +79,9 @@ public class BoardManager {
 	 * Calculates state of the chess board.
 	 *
 	 * @return state of the chess board
+	 * @throws NoKingAtTheBoardException 
 	 */
-	public BoardState updateBoardState() {
+	public BoardState updateBoardState() throws NoKingAtTheBoardException {
 //  
 		Color nextMoveColor = calculateNextMoveColor();
 
@@ -236,37 +239,49 @@ public class BoardManager {
 	}
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException, CannotMoveAtTurnException {
-		//czy ruch jest dozwolony dla danej figury
-		//javadoc! -bedzie oceniane
-		//performPromotion(move, movedPiece);
 		Board board = new Board();
 		Color currentColor = calculateNextMoveColor();
 		ConditionMovement conditionMovement = new ConditionMovement(from, to, board, currentColor);
 		PieceMoveFactory pieceMoveFactory = new PieceMoveFactory(conditionMovement);
 		return pieceMoveFactory.getPiece(); // From, To, MoveType, Piece		
 	}
-	// nullPointer - sprawdzac najpierw pozycje
-
-	private boolean isKingInCheck(Color kingColor) {
+	
+	private boolean isKingInCheck(Color kingColor) throws NoKingAtTheBoardException {
 		boolean result = false;
-		King kingInQuestion;
 		Color currentColor = calculateNextMoveColor();
 		
-		List<Move> moves;
+		Piece[][] kingPosition= getKingPosition(kingColor);
 		
-		if(kingColor==Color.BLACK) // hmm 
-		{ //.clone()
-		
-			
-		}
-		
-		// wykonuje ruch i zagrozenie sczekowania krola - excpetion
-		// tworze sztuczna mape 
-		//czy ruch nie spowoduje zrobienia samemu sobie szacha ?
-        // validate move na przeciwnika ( try/catch czy rzuci wyjatek)
-		// TODO please add implementation here
-		// po swtorzeniu board znak rownosci tylko dopisuje board 
+		for(int i =0; i< board.getPieces().length; i++){
+			for(int j =0; j< board.getPieces()[0].length; j++){
+				if(board.getPieces()[i][j] != null){
+					if(board.getPieces()[i][j])
+				}
+			}
+			}
 		return false;
+	}
+	private Piece[][] getKingPosition(Color kingColor) throws NoKingAtTheBoardException{
+		
+		int x = 0; 
+		int y = 0;
+		
+		for(int i =0; i< board.getPieces().length; i++){
+			for(int j =0; j< board.getPieces()[0].length; j++){
+				if(board.getPieces()[i][j] != null){
+					if(board.getPieces()[i][j].getClass().isInstance(new King()) && board.getPieces()[i][j].getColor().equals(kingColor)){
+						x=i;
+						y=j;
+					}
+					else{
+						throw new NoKingAtTheBoardException();
+					}
+				} //new King?
+			}
+		}
+		Piece[][] returnPiece = new Piece[x][y];
+		
+		return returnPiece;	
 	}
 
 	private boolean isAnyMoveValid(Color nextMoveColor) { 
