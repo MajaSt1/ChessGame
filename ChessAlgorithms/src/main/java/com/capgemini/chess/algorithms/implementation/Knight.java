@@ -21,11 +21,18 @@ public class Knight extends Pieces {
 
 	@Override
 	public boolean validateMove(Board board, Coordinate from, Coordinate to) throws KnightMoveException {
+		if (Math.abs(from.getX() - to.getX()) == 2 && Math.abs(from.getY() - to.getY()) == 1)
+			return true;
+		if (Math.abs(from.getX() - to.getX()) == 1 && Math.abs(from.getY() - to.getY()) == 2)
+			return true;
+		throw new KnightMoveException();
+		
+		/*
 		int equation = (int) (Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2));
 		if (equation == 5) {
 			return true;
 		} else {
 			throw new KnightMoveException();
-		}
+		} */
 	}
 }

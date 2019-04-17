@@ -251,6 +251,7 @@ public class BoardManager {
 
 		ConditionMovement conditionMovement = new ConditionMovement(from, to, board, color);
 		PiecesMoveFactory pieces = new PiecesMoveFactory(conditionMovement, to, to, board, color);
+		
 		Move canMove = pieces.getPiece();
 
 		return canMove;

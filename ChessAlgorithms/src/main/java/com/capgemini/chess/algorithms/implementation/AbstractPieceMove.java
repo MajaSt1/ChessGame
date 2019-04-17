@@ -102,22 +102,19 @@ public class AbstractPieceMove {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				Coordinate spot = new Coordinate(i, j);
-				tempBoard.setPieceAt(board.getPieceAt(spot), spot); // kopia
-																	// tablicy
-																	// figurami
+				tempBoard.setPieceAt(board.getPieceAt(spot), spot); 
+																	
+																	
 			}
 		}
-		Coordinate kingPosition = findMyKingPosition(kingColor, tempBoard); // koordynaty
-																			// krola
-		if (kingPosition != null) { // sprawdzamy czy nie zwrocilo null
+		Coordinate kingPosition = findMyKingPosition(kingColor, tempBoard); 
+																			
+		if (kingPosition != null) { 
 			for (int i = 0; i < 8; i++) {
-				for (int j = 0; j < 8; j++) { // wykonanie iteracji jeszcze raz
-												// po tablicy
-					Coordinate spot = new Coordinate(i, j); // sprawdzamy czy
-															// jest check
-					if (tempBoard.getPieceAt(spot) != null && tempBoard.getPieceAt(spot).getColor() != kingColor) { // inny
-																													// kolo-
-																													// przeciwnik
+				for (int j = 0; j < 8; j++) { 
+					
+					Coordinate spot = new Coordinate(i, j);
+					if (tempBoard.getPieceAt(spot) != null && tempBoard.getPieceAt(spot).getColor() != kingColor) { 
 						if (canPieceReachKing(spot, kingPosition, tempBoard, kingColor)) {
 							
 							return true;

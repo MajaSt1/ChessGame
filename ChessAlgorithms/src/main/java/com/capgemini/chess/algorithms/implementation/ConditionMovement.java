@@ -109,7 +109,7 @@ public class ConditionMovement extends AbstractPieceMove {
 				currentMove.setFrom(from);
 				currentMove.setTo(to);
 				currentMove.setType(kindOfMoveType(from, to, board));
-				currentMove.setMovedPiece(board.getPieces()[from.getX()][to.getX()]);
+				currentMove.setMovedPiece(board.getPieces()[to.getX()][to.getY()]);
 				return currentMove;
 			}
 

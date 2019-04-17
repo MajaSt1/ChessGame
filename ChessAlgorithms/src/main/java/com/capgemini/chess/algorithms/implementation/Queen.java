@@ -23,6 +23,9 @@ public class Queen extends Pieces {
 	public boolean validateMove(Board board, Coordinate from, Coordinate to)
 			throws QueenMoveException, RookMoveException, BishopMoveException {
 
-		return new Rook(color).validateMove(board, from, to) || new Bishop(color).validateMove(board, from, to);
+		Rook rook = new Rook(color);
+		Bishop bishop=new Bishop(color);
+		
+		return rook.validateMove(board, from, to) || bishop.validateMove(board, from, to);
 	}
 }

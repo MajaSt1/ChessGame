@@ -15,6 +15,7 @@ import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
+import com.capgemini.chess.algorithms.implementation.exceptions.PawnMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.RookMoveException;
 
 public class ChessValidatorTest {
@@ -35,12 +36,11 @@ public class ChessValidatorTest {
 		// then
 		assertNull(boardManager.getBoard().getPieceAt(new Coordinate(0, 0)));
 		assertNotNull(boardManager.getBoard().getPieceAt(new Coordinate(0, 6)));
-		// assertEquals(31, calculateNumberOfPieces(boardManager.getBoard()));
 
 	}
 
 	@Test
-	public void whitePawnMoveFourSpotsTest() throws InvalidMoveException {
+	public void whitePawnMoveFourSpotsTest() throws PawnMoveException, InvalidMoveException {
 		//
 		BoardManager boardManager = new BoardManager();
 		Board board = boardManager.getBoard();
@@ -49,15 +49,9 @@ public class ChessValidatorTest {
 		Coordinate to = new Coordinate(5, 5);
 
 		boolean exceptionThrown = false;
-		//
-		try {
-			ConditionMovement conditionMovement = new ConditionMovement(from, to, board, Color.WHITE);
-			PiecesMoveFactory pieces = new PiecesMoveFactory(conditionMovement, from, to, board, Color.WHITE);
-			Move move = pieces.getPiece();
-
-		} catch (InvalidMoveException e) {
-			exceptionThrown = true;
-		}
+		ConditionMovement conditionMovement = new ConditionMovement(from, to, board, Color.WHITE);
+		PiecesMoveFactory pieces = new PiecesMoveFactory(conditionMovement, from, to, board, Color.WHITE);
+		Move move = pieces.getPiece();
 		//
 		assertTrue(exceptionThrown);
 	}
@@ -70,9 +64,10 @@ public class ChessValidatorTest {
 		Coordinate from = new Coordinate(5, 1);
 		Coordinate to = new Coordinate(5, 2);
 		//
-		ConditionMovement conditionMovement = new ConditionMovement(from, to, board, Color.WHITE);
+        ConditionMovement conditionMovement = new ConditionMovement(from, to, board, Color.WHITE);
 		PiecesMoveFactory pieces = new PiecesMoveFactory(conditionMovement, from, to, board, Color.WHITE);
 		Move move = pieces.getPiece();
+		
 		//
 		assertEquals(move.getFrom().getX(), from.getX());
 		assertEquals(move.getFrom().getY(), from.getY());
