@@ -6,7 +6,6 @@ import com.capgemini.chess.algorithms.data.enums.Color;
 import com.capgemini.chess.algorithms.data.enums.MoveType;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.BishopMoveException;
-import com.capgemini.chess.algorithms.implementation.exceptions.CannotMoveAtTurnException;
 import com.capgemini.chess.algorithms.implementation.exceptions.EmptySquareException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingMoveException;
@@ -24,7 +23,7 @@ public class ConditionMovement extends AbstractPieceMove {
 	private Color color;
 	private Move currentMove = new Move();
 
-	public ConditionMovement(Coordinate from, Coordinate to, Board board, Color color) { 
+	public ConditionMovement(Coordinate from, Coordinate to, Board board, Color color) {
 		this.from = from;
 		this.to = to;
 		this.board = board;
@@ -35,8 +34,8 @@ public class ConditionMovement extends AbstractPieceMove {
 	 * Checks to see if given condition is valid. This will be called every time
 	 * after call out move with piece.
 	 * 
-	 * @param movement
-	 *            Type of piece of 'movement' field
+	 * @param pieces
+	 *            - given type of piece
 	 * @return boolean value corresponding to playerCanMoveAtTurn method
 	 * @throws PawnMoveException
 	 * @throws InvalidMoveException,
@@ -48,13 +47,15 @@ public class ConditionMovement extends AbstractPieceMove {
 
 		try {
 			isSpotNotEmpty(from, board);
-			checkIfColorPieceBelongsToCurrentPlayer(board,from, to, color);
+			checkIfColorPieceBelongsToCurrentPlayer(board, from, to, color);
 			isPiecePositionOnBoard(to, from, color, board, pieces);
+			isKingInCheckValidator(color, board);
 			pieces.validateMove(board, from, to);
 
 			return true;
 		} catch (InvalidMoveException | EmptySquareException | BishopMoveException | KnightMoveException
-				| RookMoveException | QueenMoveException | KingMoveException | PawnMoveException | OpponentTurnException e) {
+				| RookMoveException | QueenMoveException | KingMoveException | PawnMoveException
+				| OpponentTurnException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -68,43 +69,46 @@ public class ConditionMovement extends AbstractPieceMove {
 	 *            coordinates of 'to' field
 	 * @param from
 	 *            coordinates of 'from' field
-	 * @return MoveType value corresponding to
-	 * @throws QueenMoveException
-	 * @throws RookMoveException
-	 * @throws BishopMoveException
-	 * @throws InvalidMoveException
-	 * @throws IllegalStateException;
+	 * @return MoveType value corresponding to type of movement
+	 * @throws QueenMoveException,
+	 *             RookMoveException, BishopMoveException, InvalidMoveException,
+	 *             IllegalStateException;
 	 */
-	public MoveType kindOfMoveType(Coordinate to, Coordinate from, Board board) throws InvalidMoveException {
-		if(board.getPieceAt(from).getColor()==board.getPieceAt(to).getColor()){
-			if (board.getPieces()[from.getX()][to.getY()] == null) {
+	public MoveType kindOfMoveType(Coordinate from, Coordinate to, Board board) throws InvalidMoveException {
+		if (board.getPieceAt(from).getColor() == board.getPieceAt(to).getColor()) {
+			if (board.getPieces()[to.getX()][to.getY()] == null) { // from
 				return MoveType.ATTACK;
 			}
-			if (board.getPieces()[from.getX()][to.getY()] != null) { 					
+			if (board.getPieces()[to.getX()][to.getY()] != null) { // from
 				return MoveType.CAPTURE;
 			}
 			throw new InvalidMoveException();
 		}
 		return null;
-		
-		}
+
+	}
 
 	/**
-	 * Checks to see if the king of the given color is in check. This will be
-	 * called twice after every move
+	 * Checks to see if move is fully corresponding to piece specification -
+	 * coordinates, kind of move. This will be called after every move
 	 * 
-	 * @param movement
-	 *            Type of piece of 'movement' field
-	 * @return Move value corresponding to
-	 * @throws PawnMoveException
-	 * @throws CannotMoveAtTurnException
+	 * @param pieces-
+	 *            specific piece type
+	 * @param to
+	 *            - coordinates of 'to' field
+	 * @param from
+	 *            - coordinates of 'from' field
+	 * @param board-
+	 *            object of Board with pieces
+	 * @return Move value corresponding to piece specification
+	 * @throws InvalidMoveException
 	 */
 	public Move playerCanMoveAtTurn(Pieces pieces, Coordinate from, Coordinate to, Board board) {
 		try {
 			if (checkingValidationWithCondition(pieces) == true) {
 				currentMove.setFrom(from);
 				currentMove.setTo(to);
-				currentMove.setType(kindOfMoveType(to, from, board));
+				currentMove.setType(kindOfMoveType(from, to, board));
 				currentMove.setMovedPiece(board.getPieces()[from.getX()][to.getX()]);
 				return currentMove;
 			}
@@ -119,6 +123,7 @@ public class ConditionMovement extends AbstractPieceMove {
 	public Coordinate getFrom() {
 		return from;
 	}
+
 	public Board getBoard() {
 		return board;
 	}

@@ -30,38 +30,38 @@ public class Pawn extends Pieces {
 			if (from.getY() > to.getY()) {
 				throw new PawnMoveException();
 			}
-		} else {
+		} else { // BLACK
 			if (to.getY() > from.getY()) {
 				throw new PawnMoveException();
 			}
-
 		}
 
 		if (from.getX() == to.getX()) {
 			// not taking a piece
 			if (color.equals(Color.WHITE)) {
-				if (board.getPieces()[from.getY() + 1][from.getX()] != null) {
-					return false;
+				if (board.getPieces()[from.getX()][from.getY() + 1] != null) {
+					throw new PawnMoveException();
 				}
-			} else {
-				if (board.getPieces()[from.getY() - 1][from.getX()] != null) {
-					return false;
+			} else { // BLACK
+				if (board.getPieces()[from.getX()][from.getY() - 1] != null) {
+					throw new PawnMoveException();
 				}
 			}
+
 			if (Math.abs(to.getY() - from.getY()) > 2) {
-				return false;
+				throw new PawnMoveException();
 			} else if (Math.abs(to.getY() - from.getY()) == 2) {
 				if (hasMoved) {
-					return false; //
+					return true; 
 				}
 
 				if (color.equals(Color.WHITE)) {
 					if (board.getPieces()[from.getY() + 2][from.getX()] != null) {
-						return false;
+						throw new PawnMoveException();
 					}
-				} else {
+				} else { // BLACK
 					if (board.getPieces()[from.getY() - 2][from.getX()] != null) {
-						return false;
+						throw new PawnMoveException();
 					}
 				}
 
@@ -80,13 +80,13 @@ public class Pawn extends Pieces {
 					}
 				}
 			}
-		} else {
+		} else { //if (from.getX() != to.getX())
 			// Taking a piece
 			if (Math.abs(to.getX() - from.getX()) != 1 || Math.abs(to.getY() - from.getY()) != 1) {
-				return false;
+				throw new PawnMoveException();
 			}
-			if (board.getPieces()[to.getY()][to.getX()] == null) {
-				return false;
+			if (board.getPieces()[to.getX()][to.getY()] == null) {
+				throw new PawnMoveException();
 			}
 		}
 		return true;

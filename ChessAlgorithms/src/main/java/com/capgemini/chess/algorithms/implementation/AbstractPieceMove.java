@@ -31,15 +31,13 @@ public class AbstractPieceMove {
 	 *            board of 'board' field
 	 * @throws InvalidMoveException,
 	 *             KnightMoveException, RookMoveException, QueenMoveException,
-	 *             KingMoveException
-	 * @throws PawnMoveException
-	 * @throws BishopMoveException
+	 *             KingMoveException, PawnMoveException, BishopMoveException
 	 */
 	public void isPiecePositionOnBoard(Coordinate to, Coordinate from, Color color, Board board, Pieces pieces)
 			throws InvalidMoveException, KnightMoveException, RookMoveException, QueenMoveException, KingMoveException,
 			BishopMoveException, PawnMoveException { // void
-		if (from.getX() > board.SIZE || from.getY() >board.SIZE || from.getX() < 0 || from.getY() < 0 || to.getX() > board.SIZE 
-				|| to.getY() > board.SIZE|| to.getX() < 0 || to.getY() < 0) {
+		if (from.getX() > Board.SIZE || from.getY() >Board.SIZE || from.getX() < 0 || from.getY() < 0 || to.getX() > Board.SIZE 
+				|| to.getY() > Board.SIZE|| to.getX() < 0 || to.getY() < 0) {
 
 			throw new InvalidMoveException("Piece out of the board"); 
 		}
@@ -76,8 +74,7 @@ public class AbstractPieceMove {
 	 *            coordinates of 'from' field
 	 * @param color
 	 *            piece color of 'color' field
-	 * @param board
-	 *            board of 'board' field
+	 * @param board- object of Board with pieces
 	 * @throws OpponentTurnException
 	 */
 	public void checkIfColorPieceBelongsToCurrentPlayer(Board board, Coordinate from, Coordinate to, Color color)
@@ -90,19 +87,14 @@ public class AbstractPieceMove {
 	}
 
 	/**
-	 * Checks to see if piece of given color belongs to current player.This will
-	 * be called every time after every condition with validation called
+	 * Checks if given player's king is in check.This will
+	 * be called every time after every condition with validation 
 	 * 
-	 * @param to
-	 *            coordinates of 'to' field
-	 * @param from
-	 *            coordinates of 'from' field
-	 * @param color
-	 *            piece color of 'color' field
+	 * @param kingColor - the color of the player's king being checked
 	 * @param board
 	 *            board of 'board' field
+	 * @return boolean -return true if given player's king is in check
 	 * @throws KingInCheckException 
-	 * @throws OpponentTurnException
 	 */
 	public boolean isKingInCheckValidator(Color kingColor, Board board) throws KingInCheckException {
 		Board tempBoard = new Board(); // kopia
@@ -128,18 +120,19 @@ public class AbstractPieceMove {
 																													// przeciwnik
 						if (canPieceReachKing(spot, kingPosition, tempBoard, kingColor)) {
 							
-							throw new KingInCheckException();
+							return true;
 						}
 					}
 				}
 			}
 		}
+		
 		return false;
 	}
 
-	// spot- miejsce figury przeciwnika
+
 	private boolean canPieceReachKing(Coordinate spot, Coordinate kingPosition, Board tempBoard, Color color) {
-		boolean kingReached = false; // spot - from ; kingPosition - to
+		boolean kingReached = false; 
 		try {
 			ConditionMovement conditionMovement = new ConditionMovement(spot, kingPosition, tempBoard, color);
 			PiecesMoveFactory piecesMoveFactory = new PiecesMoveFactory(conditionMovement, spot, kingPosition,
@@ -152,12 +145,12 @@ public class AbstractPieceMove {
 	}
 
 	private Coordinate findMyKingPosition(Color myColor, Board tempBoard) {
-		for (int i = 0; i < 8; i++) { // iteracja po kopii
+		for (int i = 0; i < 8; i++) { 
 			for (int j = 0; j < 8; j++) {
-				Coordinate spot = new Coordinate(i, j); // pozycje z kopii
+				Coordinate spot = new Coordinate(i, j); 
 				if (tempBoard.getPieceAt(spot) != null && tempBoard.getPieceAt(spot).getType() == PieceType.KING
 						&& tempBoard.getPieceAt(spot).getColor() == myColor) {
-					return spot; // zwraca koordynat , pozycje
+					return spot; 
 				}
 			}
 		}
@@ -165,22 +158,14 @@ public class AbstractPieceMove {
 	}
 
 	/**
-	 * Checks to see if piece of given color belongs to current player.This will
+	 * Checks to see if any move is valid at the board .This will
 	 * be called every time after every condition with validation called
 	 * 
-	 * @param to
-	 *            coordinates of 'to' field
-	 * @param from
-	 *            coordinates of 'from' field
-	 * @param color
-	 *            piece color of 'color' field
-	 * @param board
-	 *            board of 'board' field
-	 * @throws KingInCheckException 
-	 * @throws OpponentTurnException
+	 * @param nextMoveColor - color of the player piece
+	 * @param board- object of Board with pieces
 	 */
 
-public boolean isAnyMoveValidator(Color nextMoveColor, Board board) {
+public boolean isAnyMoveValid(Color nextMoveColor, Board board) {
 	Coordinate fromSpot, toSpot;
 	boolean foundPossibleMove = false;
 	for (int i = 0; i < 8; i++) {

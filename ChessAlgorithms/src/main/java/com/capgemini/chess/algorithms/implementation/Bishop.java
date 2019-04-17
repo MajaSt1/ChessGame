@@ -15,27 +15,40 @@ public class Bishop extends Pieces {
 
 	public boolean validateMove(Board board, Coordinate from, Coordinate to) throws BishopMoveException {
 
-		int directionX = to.getX() < from.getX() ? 1 : -1;
-		int directionY = to.getY() < from.getY() ? 1 : -1;
-
-		if (Math.abs(to.getX() - from.getX()) == Math.abs(from.getY() - to.getX())) {
-			return true; // poruszanie sie po skosie dozwolone
-		} else {
-			for (int i = 1; i < Math.abs(to.getX() - from.getX()) - 1; ++i) {
-
-				if (pieceOnSquare(board, from.getX() + i * directionX, from.getY() + i * directionY)) {
-					throw new BishopMoveException();
-				}
-			}
+		if (from.getY() == to.getY() || from.getX() == to.getX()) {
 			throw new BishopMoveException();
 		}
-	}
 
-	private boolean pieceOnSquare(Board board, int i, int j) {
-		if (board.getPieces()[i][j] != null) {
-			return true;
+		if (Math.abs(to.getY() - from.getY()) != Math.abs(to.getX() - from.getX())) {
+			throw new BishopMoveException();
 		}
-		return false;
+
+		int row;
+		int col;
+
+		if (from.getY() < to.getY()) {
+			row = 1;
+		} else {
+			row = -1;
+		}
+
+		if (from.getX() < to.getX()) {
+			col = 1;
+		} else {
+			col = -1;
+		}
+
+		int y = from.getX() + col;
+		for (int x = from.getY() + row; x != to.getY(); x += row) {
+
+			if (board.getPieces()[x][y] != null) {
+			throw new BishopMoveException();
+			}
+
+			y += col;
+		}
+
+		return true;
 	}
 
 	public Color getColor() {

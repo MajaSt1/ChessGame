@@ -20,9 +20,7 @@ public class Rook extends Pieces {
 
 	@Override
 	public boolean validateMove(Board board, Coordinate from, Coordinate to) throws RookMoveException {
-		if (from.getY() == to.getY() || from.getX() == to.getX()) {
-			return true;
-		} else if (from.getX() == to.getX()) { // horizontal move
+		 if (from.getX() == to.getX()) { // horizontal move
 			if (from.getY() < to.getY())
 			// move right
 			{

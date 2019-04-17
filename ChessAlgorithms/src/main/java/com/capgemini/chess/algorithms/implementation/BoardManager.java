@@ -266,7 +266,7 @@ public class BoardManager {
 	private boolean isAnyMoveValid(Color nextMoveColor) { 
 	
 		AbstractPieceMove abstractPieceMove = new AbstractPieceMove();
-		return abstractPieceMove.isAnyMoveValidator(nextMoveColor, board); 
+		return abstractPieceMove.isAnyMoveValid(nextMoveColor, board); 
 	}
 
 	private Color calculateNextMoveColor() {

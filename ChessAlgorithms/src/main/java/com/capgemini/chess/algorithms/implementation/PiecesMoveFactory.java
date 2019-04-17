@@ -23,7 +23,14 @@ public class PiecesMoveFactory {
 		this.to=to;
 		this.board=board;
 	}
-
+	/**
+	 * Choose object of piece with given parameters. This will be called every time
+	 * after call out move with piece.
+	 * 
+	 * @return Move object - definition of Move, describing coordinates and given Types of piece
+	 * @throws InvalidMoveException
+	 *            
+	 */
 	public Move getPiece() throws InvalidMoveException {
 		switch (type = conditionMovement.getBoard().getPieceAt(conditionMovement.getFrom()).getType()) {
 
