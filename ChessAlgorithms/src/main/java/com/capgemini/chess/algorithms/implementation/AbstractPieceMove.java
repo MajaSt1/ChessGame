@@ -38,12 +38,12 @@ public class AbstractPieceMove {
 	public void isPiecePositionOnBoard(Coordinate to, Coordinate from, Color color, Board board, Pieces pieces)
 			throws InvalidMoveException, KnightMoveException, RookMoveException, QueenMoveException, KingMoveException,
 			BishopMoveException, PawnMoveException { // void
-		if (from.getX() > 7 || from.getY() > 7 || from.getX() < 0 || from.getY() < 0 || to.getX() > 7 || to.getY() > 7
-				|| to.getX() < 0 || to.getY() < 0) {
+		if (from.getX() > board.SIZE || from.getY() >board.SIZE || from.getX() < 0 || from.getY() < 0 || to.getX() > board.SIZE 
+				|| to.getY() > board.SIZE|| to.getX() < 0 || to.getY() < 0) {
 
 			throw new InvalidMoveException("Piece out of the board"); 
 		}
-		if (from.getX() == to.getX() || from.getY() == to.getY()) {
+		if (from.getX() == to.getX() && from.getY() == to.getY()) {
 			throw new InvalidMoveException("Piece had not changed position"); 
 			
 		} else {
@@ -61,13 +61,6 @@ public class AbstractPieceMove {
 	 */
 	public void isSpotNotEmpty(Coordinate from, Board board) throws EmptySquareException {
 		if (board.getPieceAt(from) != null) {
-			return;
-		}
-		throw new EmptySquareException();
-	}
-
-	public void isDestinationSpotNotEmpty(Coordinate to, Board board) throws EmptySquareException {
-		if (board.getPieceAt(to) != null) {
 			return;
 		}
 		throw new EmptySquareException();

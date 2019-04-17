@@ -48,7 +48,6 @@ public class ConditionMovement extends AbstractPieceMove {
 
 		try {
 			isSpotNotEmpty(from, board);
-			isDestinationSpotNotEmpty(to, board);
 			checkIfColorPieceBelongsToCurrentPlayer(board,from, to, color);
 			isPiecePositionOnBoard(to, from, color, board, pieces);
 			pieces.validateMove(board, from, to);
