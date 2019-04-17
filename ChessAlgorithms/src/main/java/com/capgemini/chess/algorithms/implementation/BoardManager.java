@@ -1,13 +1,7 @@
 package com.capgemini.chess.algorithms.implementation;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.naming.ldap.ManageReferralControl;
-
-import org.junit.experimental.theories.FromDataPoints;
-import org.omg.CORBA.PRIVATE_MEMBER;
 
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
@@ -92,9 +86,10 @@ public class BoardManager {
 	 * Calculates state of the chess board.
 	 *
 	 * @return state of the chess board
+	 * @throws KingInCheckException 
 	 * @throws NoKingAtTheBoardException
 	 */
-	public BoardState updateBoardState() throws NoKingAtTheBoardException {
+	public BoardState updateBoardState() throws KingInCheckException {
 		//
 		Color nextMoveColor = calculateNextMoveColor();
 
@@ -102,8 +97,7 @@ public class BoardManager {
 		boolean isAnyMoveValid = isAnyMoveValid(nextMoveColor);
 
 		BoardState boardState;
-		if (isKingInCheck) { // czy jakikolwiek ruch jest mozliwy zeby wyjsc z
-								// szachu
+		if (isKingInCheck) { 
 			if (isAnyMoveValid) {
 				boardState = BoardState.CHECK;
 			} else {
@@ -224,7 +218,7 @@ public class BoardManager {
 		this.board.setPieceAt(movedPiece, move.getTo());
 
 		performPromotion(move, movedPiece);
-	}
+	} // !!!!
 
 	private void performPromotion(Move move, Piece movedPiece) {
 		if (movedPiece == Piece.WHITE_PAWN && move.getTo().getY() == (Board.SIZE - 1)) {
@@ -252,7 +246,6 @@ public class BoardManager {
 		this.board.setPieceAt(null, lastMove.getTo());
 	}
 
-	@SuppressWarnings("null")
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException {
 		Color color = calculateNextMoveColor();
 
@@ -264,65 +257,16 @@ public class BoardManager {
 
 	}
 
-	private boolean isKingInCheck(Color kingColor) throws NoKingAtTheBoardException {
-		boolean result = false;
-		Color currentColor = calculateNextMoveColor();
-		Coordinate coordinate;
-		
-		Piece[][] kingPosition= getKingPosition(kingColor);
-		System.out.println(kingPosition);
-		Pieces pieces ;
-		for(int i =0; i< board.getPieces().length; i++){
-			for(int j =0; j< board.getPieces()[0].length; j++){
-				if(board.getPieces()[i][j] != null){ // znam pozycje krola i wszystkich figur
-					if(){
-				} 
-			}
-			}
-		return false;
+	private boolean isKingInCheck(Color kingColor) throws KingInCheckException {
+		AbstractPieceMove abstractPieceMove = new AbstractPieceMove();
+		return abstractPieceMove.isKingInCheckValidator(kingColor, board);
 	}
 
-	private Piece[][] getKingPosition(Color kingColor) throws NoKingAtTheBoardException {
-
-		int x = 0;
-		int y = 0;
-
-		for (int i = 0; i < board.getPieces().length; i++) {
-			for (int j = 0; j < board.getPieces()[0].length; j++) {
-				if (board.getPieces()[i][j] != null) { // polozenie wszystkich
-														// figur
-					if (board.getPieces()[i][j].getClass().isInstance(new King(Color.WHITE))
-							&& board.getPieces()[i][j].getColor().equals(kingColor)) {
-						x = i; // is Instance ? dobrze?
-						y = j;
-					} else {
-						throw new NoKingAtTheBoardException();
-					}
-				} // new King?
-			}
-		}
-		Piece[][] returnPiece = new Piece[x][y];
-
-		return returnPiece; // zwraca polozenie krola
-	}
 
 	private boolean isAnyMoveValid(Color nextMoveColor) { 
 	
-		Piece[][] oldBoard = board.getPieces().clone();
-		
-		for(int x=0; x<board.getPieces().length; x++)
-			for(int z=0; z<board.getPieces()[0].length; z++)
-				//check this piece against every other piece...
-				try{
-					if(board.getPieces()[x][z] !=null)
-						if(board.getPieces()[x][z].getColor().equals(nextMoveColor)){
-							performMove(from, to);
-							board.getPieces()=oldBoard;
-							return true;
-						}
-				}
-
-		return false;
+		AbstractPieceMove abstractPieceMove = new AbstractPieceMove();
+		return abstractPieceMove.isAnyMoveValidator(nextMoveColor, board); 
 	}
 
 	private Color calculateNextMoveColor() {

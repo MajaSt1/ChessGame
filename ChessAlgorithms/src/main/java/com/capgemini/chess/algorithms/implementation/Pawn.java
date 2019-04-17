@@ -28,11 +28,11 @@ public class Pawn extends Pieces {
 
 		if (color.equals(Color.WHITE)) {
 			if (from.getY() > to.getY()) {
-				return false;
+				throw new PawnMoveException();
 			}
 		} else {
 			if (to.getY() > from.getY()) {
-				return false;
+				throw new PawnMoveException();
 			}
 
 		}

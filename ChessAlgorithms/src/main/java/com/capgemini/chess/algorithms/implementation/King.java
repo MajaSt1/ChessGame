@@ -51,4 +51,8 @@ public class King extends Pieces {
 		hasMoved = true;
 		return true;
 	}
+	
+	public void kingPosition(){
+		
+	}
 }

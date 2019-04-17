@@ -245,6 +245,7 @@ public class BoardManagerTest {
 		board.getMoveHistory().add(createDummyMove(board));
 		board.setPieceAt(Piece.BLACK_ROOK, new Coordinate(1, 4));
 		board.setPieceAt(Piece.WHITE_KNIGHT, new Coordinate(5, 4));
+
 		
 		// when
 		BoardManager boardManager = new BoardManager(board);

@@ -30,7 +30,7 @@ import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveExcep
 @SuiteClasses({ BoardManagerTest.class }) //nie jest potrzebne wlasciwie
 public class ChessTestSuite {
 
-	/* @Test
+	 @Test
 	public void validateMove() {
        //// given
 		List<Move> moves = new ArrayList<>();
@@ -48,24 +48,8 @@ public class ChessTestSuite {
 		assertNotNull(boardManager.getBoard().getPieceAt(new Coordinate(0, 6)));
 		assertEquals(31, calculateNumberOfPieces(boardManager.getBoard()));
 		
-	} */
-	/*
-	// given
-			Board board = new Board();
-			board.setPieceAt(Piece.WHITE_PAWN, new Coordinate(1, 2));
-			
-			// when
-			BoardManager boardManager = new BoardManager(board);
-			boolean exceptionThrown = false;
-			try {
-				boardManager.performMove(new Coordinate(1, 2), new Coordinate(1, 1));
-			} catch (InvalidMoveException e) {
-				exceptionThrown = true;
-			}
-			
-			// then 
-			assertTrue(exceptionThrown);
-	 */
+	} 
+	 
 	@Test
 	public void kingChecked(){
 		// given 

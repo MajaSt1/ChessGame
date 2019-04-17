@@ -6,7 +6,6 @@ import com.capgemini.chess.algorithms.data.enums.Color;
 import com.capgemini.chess.algorithms.data.enums.PieceType;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
-import com.capgemini.chess.algorithms.implementation.exceptions.PawnMoveException;
 
 public class PiecesMoveFactory {
 
@@ -21,7 +20,7 @@ public class PiecesMoveFactory {
 		this.conditionMovement = conditionMovement;
 		this.color = color;
 		this.from = from;
-		this.to= to;
+		this.to=to;
 		this.board=board;
 	}
 
@@ -49,6 +48,14 @@ public class PiecesMoveFactory {
 		}
 		throw new InvalidMoveException();
 
+	}
+
+	public Coordinate getTo() {
+		return to;
+	}
+
+	public void setTo(Coordinate to) {
+		this.to = to;
 	}
 
 }

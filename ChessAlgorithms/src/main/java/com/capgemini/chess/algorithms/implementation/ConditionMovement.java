@@ -47,7 +47,8 @@ public class ConditionMovement extends AbstractPieceMove {
 	public boolean checkingValidationWithCondition(Pieces pieces) {
 
 		try {
-			isNotEmpty(from, board);
+			isSpotNotEmpty(from, board);
+			isDestinationSpotNotEmpty(to, board);
 			checkIfColorPieceBelongsToCurrentPlayer(board,from, to, color);
 			isPiecePositionOnBoard(to, from, color, board, pieces);
 			pieces.validateMove(board, from, to);
@@ -75,23 +76,19 @@ public class ConditionMovement extends AbstractPieceMove {
 	 * @throws InvalidMoveException
 	 * @throws IllegalStateException;
 	 */
-	public MoveType kindOfMoveType(Coordinate to, Coordinate from, Board board) {
-		if (board.getPieceAt(from).getColor() == board.getPieceAt(to).getColor()) { // to - twoj
-			// pionek
+	public MoveType kindOfMoveType(Coordinate to, Coordinate from, Board board) throws InvalidMoveException {
+		if(board.getPieceAt(from).getColor()==board.getPieceAt(to).getColor()){
 			if (board.getPieces()[from.getX()][to.getY()] == null) {
 				return MoveType.ATTACK;
 			}
-			if (board.getPieces()[from.getX()][to.getY()] != null) { // bierze
-																		// kolor
-																		// z
-																		// pozycji
+			if (board.getPieces()[from.getX()][to.getY()] != null) { 					
 				return MoveType.CAPTURE;
 			}
-		} else {
-			throw new IllegalStateException("Opponent turn");
+			throw new InvalidMoveException();
 		}
 		return null;
-	} 
+		
+		}
 
 	/**
 	 * Checks to see if the king of the given color is in check. This will be
@@ -103,16 +100,21 @@ public class ConditionMovement extends AbstractPieceMove {
 	 * @throws PawnMoveException
 	 * @throws CannotMoveAtTurnException
 	 */
-	public Move playerCanMoveAtTurn(Pieces pieces, Coordinate from, Coordinate to, Board board)  {
-		if (checkingValidationWithCondition(pieces) == true) {
-			currentMove.setFrom(from);
-			currentMove.setTo(to);
-			currentMove.setType(kindOfMoveType(from, to, board));
-			currentMove.setMovedPiece(board.getPieces()[from.getX()][to.getX()]);
+	public Move playerCanMoveAtTurn(Pieces pieces, Coordinate from, Coordinate to, Board board) {
+		try {
+			if (checkingValidationWithCondition(pieces) == true) {
+				currentMove.setFrom(from);
+				currentMove.setTo(to);
+				currentMove.setType(kindOfMoveType(to, from, board));
+				currentMove.setMovedPiece(board.getPieces()[from.getX()][to.getX()]);
+				return currentMove;
+			}
 
-			return currentMove;
+		} catch (InvalidMoveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return null; // !!!
+		return null;
 	}
 
 	public Coordinate getFrom() {

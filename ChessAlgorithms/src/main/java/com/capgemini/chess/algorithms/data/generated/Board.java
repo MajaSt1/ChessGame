@@ -54,7 +54,6 @@ public class Board {
 	public void setPieceAt(Piece piece, Coordinate coordinate) {
 		pieces[coordinate.getX()][coordinate.getY()] = piece;
 	}
-	
 	/**
 	 * Gets chess piece from board based on given coordinates
 	 * 
