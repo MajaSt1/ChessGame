@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.naming.ldap.ManageReferralControl;
 
+import org.junit.experimental.theories.FromDataPoints;
+import org.omg.CORBA.PRIVATE_MEMBER;
+
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.Move;
 import com.capgemini.chess.algorithms.data.enums.BoardState;
@@ -14,10 +17,15 @@ import com.capgemini.chess.algorithms.data.enums.MoveType;
 import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.enums.PieceType;
 import com.capgemini.chess.algorithms.data.generated.Board;
+import com.capgemini.chess.algorithms.implementation.exceptions.BishopMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.CannotMoveAtTurnException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
+import com.capgemini.chess.algorithms.implementation.exceptions.KnightMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.NoKingAtTheBoardException;
+import com.capgemini.chess.algorithms.implementation.exceptions.PawnMoveException;
+import com.capgemini.chess.algorithms.implementation.exceptions.QueenMoveException;
+import com.capgemini.chess.algorithms.implementation.exceptions.RookMoveException;
 
 /**
  * Class for managing of basic operations on the Chess Board.
@@ -64,9 +72,14 @@ public class BoardManager {
 	 * @return move object which includes moved piece and move type
 	 * @throws InvalidMoveException
 	 *             in case move is not valid
-	 * @throws CannotMoveAtTurnException 
+	 * @throws RookMoveException
+	 * @throws QueenMoveException
+	 * @throws PawnMoveException
+	 * @throws KnightMoveException
+	 * @throws BishopMoveException
+	 * @throws CannotMoveAtTurnException
 	 */
-	public Move performMove(Coordinate from, Coordinate to) throws InvalidMoveException, CannotMoveAtTurnException {
+	public Move performMove(Coordinate from, Coordinate to) throws InvalidMoveException {
 
 		Move move = validateMove(from, to);
 
@@ -79,17 +92,18 @@ public class BoardManager {
 	 * Calculates state of the chess board.
 	 *
 	 * @return state of the chess board
-	 * @throws NoKingAtTheBoardException 
+	 * @throws NoKingAtTheBoardException
 	 */
 	public BoardState updateBoardState() throws NoKingAtTheBoardException {
-//  
+		//
 		Color nextMoveColor = calculateNextMoveColor();
 
 		boolean isKingInCheck = isKingInCheck(nextMoveColor);
 		boolean isAnyMoveValid = isAnyMoveValid(nextMoveColor);
 
 		BoardState boardState;
-		if (isKingInCheck) { // czy jakikolwiek ruch jest mozliwy zeby wyjsc z szachu
+		if (isKingInCheck) { // czy jakikolwiek ruch jest mozliwy zeby wyjsc z
+								// szachu
 			if (isAnyMoveValid) {
 				boardState = BoardState.CHECK;
 			} else {
@@ -238,57 +252,75 @@ public class BoardManager {
 		this.board.setPieceAt(null, lastMove.getTo());
 	}
 
-	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException, CannotMoveAtTurnException {
-		Board board = new Board();
-		Color currentColor = calculateNextMoveColor();
-		ConditionMovement conditionMovement = new ConditionMovement(from, to, board, currentColor);
-		PieceMoveFactory pieceMoveFactory = new PieceMoveFactory(conditionMovement);
-		return pieceMoveFactory.getPiece(); // From, To, MoveType, Piece		
+	@SuppressWarnings("null")
+	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException {
+		Color color = calculateNextMoveColor();
+
+		ConditionMovement conditionMovement = new ConditionMovement(from, to, board, color);
+		PiecesMoveFactory pieces = new PiecesMoveFactory(conditionMovement, to, to, board, color);
+		Move canMove = pieces.getPiece();
+
+		return canMove;
+
 	}
-	
+
 	private boolean isKingInCheck(Color kingColor) throws NoKingAtTheBoardException {
 		boolean result = false;
 		Color currentColor = calculateNextMoveColor();
+		Coordinate coordinate;
 		
 		Piece[][] kingPosition= getKingPosition(kingColor);
-		
+		System.out.println(kingPosition);
+		Pieces pieces ;
 		for(int i =0; i< board.getPieces().length; i++){
 			for(int j =0; j< board.getPieces()[0].length; j++){
-				if(board.getPieces()[i][j] != null){
-					if(board.getPieces()[i][j])
-				}
+				if(board.getPieces()[i][j] != null){ // znam pozycje krola i wszystkich figur
+					if(){
+				} 
 			}
 			}
 		return false;
 	}
-	private Piece[][] getKingPosition(Color kingColor) throws NoKingAtTheBoardException{
-		
-		int x = 0; 
+
+	private Piece[][] getKingPosition(Color kingColor) throws NoKingAtTheBoardException {
+
+		int x = 0;
 		int y = 0;
-		
-		for(int i =0; i< board.getPieces().length; i++){
-			for(int j =0; j< board.getPieces()[0].length; j++){
-				if(board.getPieces()[i][j] != null){
-					if(board.getPieces()[i][j].getClass().isInstance(new King()) && board.getPieces()[i][j].getColor().equals(kingColor)){
-						x=i;
-						y=j;
-					}
-					else{
+
+		for (int i = 0; i < board.getPieces().length; i++) {
+			for (int j = 0; j < board.getPieces()[0].length; j++) {
+				if (board.getPieces()[i][j] != null) { // polozenie wszystkich
+														// figur
+					if (board.getPieces()[i][j].getClass().isInstance(new King(Color.WHITE))
+							&& board.getPieces()[i][j].getColor().equals(kingColor)) {
+						x = i; // is Instance ? dobrze?
+						y = j;
+					} else {
 						throw new NoKingAtTheBoardException();
 					}
-				} //new King?
+				} // new King?
 			}
 		}
 		Piece[][] returnPiece = new Piece[x][y];
-		
-		return returnPiece;	
+
+		return returnPiece; // zwraca polozenie krola
 	}
 
 	private boolean isAnyMoveValid(Color nextMoveColor) { 
-		//czy ruch jest mozliwy do wykonania
-
-		//do updateBoardState()!!!!! -> isKingCheck() -> validateMove()
-		// TODO please add implementation here
+	
+		Piece[][] oldBoard = board.getPieces().clone();
+		
+		for(int x=0; x<board.getPieces().length; x++)
+			for(int z=0; z<board.getPieces()[0].length; z++)
+				//check this piece against every other piece...
+				try{
+					if(board.getPieces()[x][z] !=null)
+						if(board.getPieces()[x][z].getColor().equals(nextMoveColor)){
+							performMove(from, to);
+							board.getPieces()=oldBoard;
+							return true;
+						}
+				}
 
 		return false;
 	}

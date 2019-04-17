@@ -11,21 +11,21 @@ import com.capgemini.chess.algorithms.implementation.exceptions.EmptySquareExcep
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KnightMoveException;
-import com.capgemini.chess.algorithms.implementation.exceptions.NoKingAtTheBoardException;
 import com.capgemini.chess.algorithms.implementation.exceptions.OpponentTurnException;
+import com.capgemini.chess.algorithms.implementation.exceptions.PawnMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.QueenMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.RookMoveException;
 
-public class ConditionMovement extends AbstractPieceMove{
+public class ConditionMovement extends AbstractPieceMove {
 
 	private Coordinate from;
 	private Coordinate to;
 	private Board board;
 	private Color color;
 	private Move currentMove = new Move();
-	
-	public ConditionMovement(Coordinate from, Coordinate to, Board board ,Color color) { // color
-		this.from= from;
+
+	public ConditionMovement(Coordinate from, Coordinate to, Board board, Color color) { 
+		this.from = from;
 		this.to = to;
 		this.board = board;
 		this.color = color;
@@ -38,22 +38,23 @@ public class ConditionMovement extends AbstractPieceMove{
 	 * @param movement
 	 *            Type of piece of 'movement' field
 	 * @return boolean value corresponding to playerCanMoveAtTurn method
+	 * @throws PawnMoveException
 	 * @throws InvalidMoveException,
 	 *             EmptySquareException, OpponentTurnException,
 	 *             BishopMoveException, KnightMoveException, RookMoveException,
 	 *             QueenMoveException, KingMoveException e
 	 */
-	public boolean checkingValidationWithCondition(Movement movement) {
+	public boolean checkingValidationWithCondition(Pieces pieces) {
+
 		try {
-			isNotEmpty(from);
-			checkIfColorPieceBelongsToCurrentPlayer(board, from, to, color);
-			isPiecePositionOnBoard(to, from, color, board);
-			movement.isMoveBlocked(from, to);
-			movement.validatePieceMove(from, to, color, board);
+			isNotEmpty(from, board);
+			checkIfColorPieceBelongsToCurrentPlayer(board,from, to, color);
+			isPiecePositionOnBoard(to, from, color, board, pieces);
+			pieces.validateMove(board, from, to);
 
 			return true;
-		} catch (InvalidMoveException | EmptySquareException | OpponentTurnException | BishopMoveException
-				| KnightMoveException | RookMoveException | QueenMoveException | KingMoveException e) {
+		} catch (InvalidMoveException | EmptySquareException | BishopMoveException | KnightMoveException
+				| RookMoveException | QueenMoveException | KingMoveException | PawnMoveException | OpponentTurnException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -68,21 +69,29 @@ public class ConditionMovement extends AbstractPieceMove{
 	 * @param from
 	 *            coordinates of 'from' field
 	 * @return MoveType value corresponding to
+	 * @throws QueenMoveException
+	 * @throws RookMoveException
+	 * @throws BishopMoveException
+	 * @throws InvalidMoveException
 	 * @throws IllegalStateException;
 	 */
-	public MoveType kindOfMoveType(Coordinate to, Coordinate from) {
-		if (board.getPieceAt(from).getColor() == board.getPieceAt(to).getColor()) {
-			if (board.getPieceAt(to) == null) {
+	public MoveType kindOfMoveType(Coordinate to, Coordinate from, Board board) {
+		if (board.getPieceAt(from).getColor() == board.getPieceAt(to).getColor()) { // to - twoj
+			// pionek
+			if (board.getPieces()[from.getX()][to.getY()] == null) {
 				return MoveType.ATTACK;
 			}
-			if (board.getPieceAt(to) != null) {
+			if (board.getPieces()[from.getX()][to.getY()] != null) { // bierze
+																		// kolor
+																		// z
+																		// pozycji
 				return MoveType.CAPTURE;
 			}
 		} else {
 			throw new IllegalStateException("Opponent turn");
 		}
 		return null;
-	}
+	} 
 
 	/**
 	 * Checks to see if the king of the given color is in check. This will be
@@ -90,24 +99,26 @@ public class ConditionMovement extends AbstractPieceMove{
 	 * 
 	 * @param movement
 	 *            Type of piece of 'movement' field
-	 * @return Move value corresponding to 
+	 * @return Move value corresponding to
+	 * @throws PawnMoveException
 	 * @throws CannotMoveAtTurnException
 	 */
-	public Move playerCanMoveAtTurn(Movement movement) throws CannotMoveAtTurnException {
-		if (checkingValidationWithCondition(movement) == true) {
+	public Move playerCanMoveAtTurn(Pieces pieces, Coordinate from, Coordinate to, Board board)  {
+		if (checkingValidationWithCondition(pieces) == true) {
 			currentMove.setFrom(from);
 			currentMove.setTo(to);
-			currentMove.setType(kindOfMoveType(to, from));
-			currentMove.setMovedPiece(board.getPieceAt(from));
+			currentMove.setType(kindOfMoveType(from, to, board));
+			currentMove.setMovedPiece(board.getPieces()[from.getX()][to.getX()]);
 
 			return currentMove;
-		} else {
-			throw new CannotMoveAtTurnException("Can't move right now!");
 		}
+		return null; // !!!
 	}
 
 	public Coordinate getFrom() {
 		return from;
 	}
-
+	public Board getBoard() {
+		return board;
+	}
 }

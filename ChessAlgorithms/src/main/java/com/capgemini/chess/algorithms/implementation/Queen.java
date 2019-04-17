@@ -3,28 +3,26 @@ package com.capgemini.chess.algorithms.implementation;
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.enums.Color;
 import com.capgemini.chess.algorithms.data.generated.Board;
-import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
+import com.capgemini.chess.algorithms.implementation.exceptions.BishopMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.QueenMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.RookMoveException;
 
-public class Queen implements Movement{
+public class Queen extends Pieces {
+	public Color color;
 
-	private Bishop bishop;
-	private Rook rook;
-	
-	@Override
-	public boolean validatePieceMove(Coordinate from, Coordinate to, Color color, Board board) throws QueenMoveException, InvalidMoveException, RookMoveException {
-		if(bishop.validatePieceMove(from, to, color, board) || rook.validatePieceMove(from, to, color, board) ){
-			return true;
-		}else {
-			throw new QueenMoveException();
-		}
+	public Queen(Color color) {
+		this.color = color;
 	}
 
 	@Override
-	public boolean isMoveBlocked(Coordinate from, Coordinate to) throws InvalidMoveException{
-		// TODO Auto-generated method stub
-		return false;
+	public Color getColor() {
+		return color;
 	}
 
+	@Override
+	public boolean validateMove(Board board, Coordinate from, Coordinate to)
+			throws QueenMoveException, RookMoveException, BishopMoveException {
+
+		return (new Rook(color).validateMove(board, from, to) || new Bishop(color).validateMove(board, from, to));
+	}
 }

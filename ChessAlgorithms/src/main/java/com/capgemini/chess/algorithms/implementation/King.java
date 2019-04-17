@@ -3,29 +3,52 @@ package com.capgemini.chess.algorithms.implementation;
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.enums.Color;
 import com.capgemini.chess.algorithms.data.generated.Board;
-import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
-import com.capgemini.chess.algorithms.implementation.exceptions.KingMoveException;
 
-public class King implements Movement{
+public class King extends Pieces {
+
+	public Color color;
+	public boolean hasMoved;
+	public boolean castled;
+
+	public King(Color color) {
+		this.color = color;
+		this.hasMoved = false;
+		this.castled = false;
+	}
+
+	public Color getColor() {
+		return this.color;
+	}
 
 	@Override
-	public boolean validatePieceMove(Coordinate from, Coordinate to, Color color, Board board) throws KingMoveException {
-		int absoluteX = Math.abs(to.getX() - from.getX());
-		int absoluteY = Math.abs(to.getY() - from.getY());
-		
-		if (absoluteX <= 1 && absoluteY <= 1){
-			if (absoluteX == 0 && absoluteY == 0){
+	public boolean validateMove(Board board, Coordinate from, Coordinate to) {
+
+		if (Math.abs(to.getY() - from.getY()) > 1 || Math.abs(to.getX() - from.getX()) > 1) {
+			if (hasMoved) {
 				return false;
 			}
-			return true;
+			// castle
+			if (to.getX() - from.getX() == 2 && from.getY() == to.getY()) {
+				//
+				if (board.getPieces()[to.getY()][from.getX() + 1] != null
+						|| board.getPieces()[to.getX()][from.getX() + 2] != null) {
+					castled = false;
+					return false;
+				}
+			} else if (from.getX() - to.getX() == 3 && from.getY() == to.getY()) {
+				if (board.getPieces()[to.getY()][from.getX() - 1] != null
+						|| board.getPieces()[to.getX()][from.getX() - 2] != null) {
+					castled = false;
+					return false;
+				}
+			} else {
+				castled = false;
+				return false;
+			}
+			castled = true;
+
 		}
-		throw new KingMoveException();
+		hasMoved = true;
+		return true;
 	}
-
-	@Override
-	public boolean isMoveBlocked(Coordinate from, Coordinate to) throws InvalidMoveException {
-		return false;
-	
-	}
-
 }

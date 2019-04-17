@@ -13,6 +13,7 @@ import com.capgemini.chess.algorithms.data.enums.BoardState;
 import com.capgemini.chess.algorithms.data.enums.MoveType;
 import com.capgemini.chess.algorithms.data.enums.Piece;
 import com.capgemini.chess.algorithms.data.generated.Board;
+import com.capgemini.chess.algorithms.implementation.exceptions.CannotMoveAtTurnException;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
 
@@ -498,7 +499,7 @@ public class BoardManagerTest {
 	}
 	
 	@Test
-	public void testPerformMoveInvalidQueenLeapsOver() {
+	public void testPerformMoveInvalidQueenLeapsOver() throws CannotMoveAtTurnException {
 		// given
 		Board board = new Board();
 		board.setPieceAt(Piece.WHITE_QUEEN, new Coordinate(1, 1));
