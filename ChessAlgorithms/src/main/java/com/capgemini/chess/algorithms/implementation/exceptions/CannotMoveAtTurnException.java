@@ -1,6 +1,6 @@
 package com.capgemini.chess.algorithms.implementation.exceptions;
 
-public class CannotMoveAtTurnException extends Exception{
+public class  CannotMoveAtTurnException extends Exception{
 	
 	private static final long serialVersionUID = 1L;
 	 
